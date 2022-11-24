@@ -1,0 +1,4 @@
+#!/usr/bin/env fish
+
+set text (grep "^$QUTE_SELECTED_TEXT.*" ~/Downloads/edict2u | sed 's/\(.*\)\/Ent.*/\\\n\1\\\n/')
+echo "jseval alert(`$text`)" >> "$QUTE_FIFO"

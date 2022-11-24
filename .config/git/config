@@ -1,0 +1,80 @@
+[user]
+  name = Artyom Mironov
+  email = artyommironov@protonmail.com
+[includeIf "gitdir/i:~/Work/"]
+  path = ~/Work/.gitconfig
+[core]
+  autocrlf = input
+  safecrlf = false
+  editor = $EDITOR
+[color]
+  ui = true
+  status = auto
+  branch = auto
+[color "diff"]
+  context = brightblack
+[credential]
+  helper = cache --timeout=3600
+[alias]
+  a = add
+  aa = add --all
+  ai = add --interactive
+  b = branch
+  bd = branch -D
+  bdc = "!( git fetch --prune && git for-each-ref --format '%(refname:short) %(upstream:track)' | awk '$2 == \"[gone]\" {print $1}'; git branch --merged | grep -E -v \"(^\\*|master|main|dev|develop|release)\" ) | xargs git branch -d"
+  c = commit --verbose
+  ca = commit --verbose --all
+  cam = commit --verbose --all --amend
+  camn = commit --verbose --all --amend --no-edit
+  ch = cherry-pick
+  cha = cherry-pick --abort
+  chc = cherry-pick --continue
+  cl = clone
+  cm = commit --verbose --amend
+  cmn = commit --verbose --amend --no-edit
+  co = checkout
+  d = diff
+  ds = diff --stat
+  f = fetch
+  fa = fetch --all --prune
+  l = log --pretty='%C(blue)%h%C(reset) %C(magenta)%ad%C(reset) %s %C(green)%an%C(reset)%C(yellow)%d%C(reset)' --graph --date='format:%Y-%m-%d %H:%M'
+  m = merge
+  ma = merge --abort
+  mc = merge --continue
+  mf = "!f() { git rev-list $1..$HEAD --ancestry-path --merges --oneline; }; f"
+  mt = mergetool --no-prompt
+  pl = pull
+  plr = pull --rebase
+  pu = push
+  puf = push --force-with-lease
+  puu = push --set-upstream origin HEAD
+  r = rebase
+  ra = rebase --abort
+  rc = rebase --continue
+  re = restore
+  res = restore --staged
+  ri = rebase --interactive
+  ro = rebase --onto
+  rt = reset
+  rth = reset --hard
+  rv = revert
+  rva = revert --abort
+  rvc = revert --continue
+  s = status --short
+  sw = switch
+  swc = switch --create
+  swt = switch --track
+  sh = stash
+  sha = stash apply
+  shp = stash pop
+  su = submodule
+  suu = submodule update --init
+[difftool]
+  prompt = false
+[pull]
+  ff = only
+[filter "lfs"]
+  clean = git-lfs clean -- %f
+  smudge = git-lfs smudge -- %f
+  process = git-lfs filter-process
+  required = true

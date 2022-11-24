@@ -1,0 +1,48 @@
+#!/usr/bin/env fish
+
+if test (count $argv) -ne 1
+  echo "Error: wrong argument count"
+  exit 1
+end
+
+set path $argv[1]
+
+if test (uname -s) = "Darwin"
+  open "$path"
+else
+  set fileDir (dirname $path)
+  set fileName (basename $path)
+  set fileNameWithoutExt (path change-extension '' $fileName)
+  switch "$fileName"
+    case '*.exe'
+      wine "$path"
+    case '*.tar'
+      tar -extract --one-top-level --verbose --file="$path"
+    case '*.tar.gz'
+      tar --extract --one-top-level --verbose --gzip --file="$path"
+    case '*.tar.bz2'
+      tar --extract --one-top-level --verbose --bzip2 --file="$path"
+    case '*.gz'
+      gzip --decompress --keep "$path"
+    case '*.zip' '*.7z'
+      7z -o"$fileNameWithoutExt" x "$path"
+    case '*.rar'
+      unrar x "$path" "$fileNameWithoutExt/"
+    case '*.bmp' '*.gif' '*.jpeg' '*.jpg' '*.JPG' '*.png' '*.svg' '*.tga' '*.webp'
+      imv -u nearest_neighbour -n "$fileName" "$fileDir" &> /dev/null
+    case '*.asf' '*.avi' '*.flv' '*.mkv' '*.mpeg' '*.mpg' '*.mp4' '*.webm' '*.wmv'
+      mpv "$path"
+    case '*.flac' '*.mp3' '*.ogg' '*.opus' '*.wav'
+      mpv "$path"
+    case '*.doc' '*.docx' '*.odp' '*.ods' '*.odt' '*.xls' '*.xlsx'
+      libreoffice "$path"
+    case '*.djvu' '*.pdf'
+      zathura "$path"
+    case '*.blend'
+      blender "$path"
+    case '*.htm' '*.html'
+      "$BROWSER" "$path"
+    case '*'
+      "$EDITOR" "$path"
+  end
+end

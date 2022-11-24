@@ -1,0 +1,84 @@
+#!/usr/bin/python3
+import mutagen
+import mutagen.mp3
+import mutagen.apev2
+import mutagen.flac
+import os.path
+import sys
+import argparse
+
+parser = argparse.ArgumentParser(description='Music tagging tool')
+parser.add_argument('files', nargs='+', metavar='FILE', help='file to process')
+parser.add_argument('-q', '--query', action='store_true', help='query tags')
+parser.add_argument('-c', '--clear', action='store_true', help='delete all tags except artist, album, title, date, tracknumber')
+parser.add_argument('-d', '--delete', action='store_true', help='delete all tags')
+if len(sys.argv) == 1:
+    parser.print_help()
+    sys.exit(1)
+args=parser.parse_args()
+
+def getTag(f, name):
+    try:
+        return f[name][0]
+    except:
+        return ''
+
+def getExt(str):
+    return os.path.splitext(str)[1]
+
+def isFlac(str):
+    return getExt(str) == '.flac'
+
+def isMp3(str):
+    return getExt(str) == '.mp3'
+
+def isMusic(str):
+    return isMp3(str) or isFlac(str) or getExt(str) == '.m4a' or getExt(str) == '.ogg'
+
+if args.query:
+    sys.stdout.write('\nQuery tag info...\n\n')
+    for fn in args.files:
+        if isMusic(fn):
+            f = mutagen.File(fn, easy=True)
+            sys.stdout.write(fn + '\n')
+            sys.stdout.write(f.pprint() + '\n\n')
+    sys.stdout.write('Done!\n')
+elif args.clear or args.delete:
+    sys.stdout.write('\nDeleting FLAC pictures...\n\n')
+    for fn in args.files:
+        if isFlac(fn):
+            try:
+                f = mutagen.flac.FLAC(fn)
+                f.clear_pictures()
+                f.save()
+                sys.stdout.write(fn + '\n')
+            except:
+                raise
+    sys.stdout.write('\nDeleting mp3 APEv2 tags...\n\n')
+    for fn in args.files:
+        if isMp3(fn):
+            try:
+                mutagen.apev2.delete(fn)
+                sys.stdout.write(fn + '\n')
+            except:
+                pass
+    sys.stdout.write('\nDeleting ID3 tags...\n\n')
+    for fn in args.files:
+        if isMusic(fn):
+            sys.stdout.write(fn + '\n')
+            f = mutagen.File(fn, easy=True)
+            if args.clear:
+                artist = getTag(f, 'artist')
+                album = getTag(f, 'album')
+                date = getTag(f, 'date')
+                title = getTag(f, 'title')
+                tracknumber = getTag(f, 'tracknumber').split('/')[0]
+            f.delete()
+            if args.clear:
+                f['artist'] = artist
+                f['album'] = album
+                f['date'] = date
+                f['tracknumber'] = tracknumber
+                f['title'] = title
+            f.save()
+    sys.stdout.write('Done!\n')

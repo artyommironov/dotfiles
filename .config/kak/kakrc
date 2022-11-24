@@ -1,0 +1,130 @@
+colorscheme my
+
+# show 3 rows and columns around the cursor
+set-option global scrolloff 3,3
+# indent with 2 spaces
+set-option global indentwidth 2
+# hide clippy
+set-option global ui_options terminal_assistant=none
+
+# highlight trailing whitespace
+add-highlighter global/ regex \h+$ 0:Error
+
+# key mappings
+#
+# h   select left                          H   extend left
+# l   select right                         L   extend right
+# k   select up                            K   extend up
+# j   select down                          J   extend down
+# w   select to next word start            W   extend to next word start
+# e   select to next word end              E   extend to next word end
+# b   select to prev word start            B   extend to prev word start
+# f   select to next char included         F   extend to next char included
+# t   select to next char                  T   extend to next char
+# g   select to location                   G   extend to location
+# m   select to matching char              M   extend to matching char
+# n   select next search match             N   extend with next search match
+# x   select line                          X   -
+# i   insert before selection              I   insert at line begin
+# a   insert after selection               A   insert at line end
+# o   insert on new line below             O   insert on new line above
+# p   paste before selection               P   paste after selection
+# s   select regex in selection            S   split selection on regex
+# r   replace selection with char          R   replace selectian with yank
+# q   play recorded macro                  Q   start/end macro recording
+# u   undo                                 U   redo
+# z   restore selection                    Z   save selection
+# v   view mode                            V   lock view
+# y   yank                                 Y   choose register
+# c   change selected text                 C   change to the end of line
+# d   delete selected text                 D   -
+# :   enter command prompt                 ;   reduce selection to cursor
+# '    select inner surrounding object     "   select surrounding object
+# ,   clear selections                     .   repeat last insert command
+# <   deintent                             >   indent
+# /   search                               ?   search extend
+# (   rotate selection backward            )   rotate selection forward
+# [   rotate selection content backward    ]   rotate selection content forwar
+# {   move backward in history             }   move forward in history
+# !   insert output of command             ~   swap case
+# *   set search pattern to selection      +   repeat last object or t/f selection command
+# =   split selection on line ends         ^   join lines
+# @   copy selection on prev lines         #   copy selection on next lines
+# $   keep pipe                            `   trim selection
+# %   select whole buffer                  &   swap cursors and anchors
+# \   disable hooks                        |   pipe
+# -   merge contiguous selections          _   remove main selection
+
+# fix default mappings
+map global normal / /(?i)
+map global normal <minus> <a-_>
+map global normal = <a-s>
+map global normal + <a-.>
+map global normal ^ <a-j>
+map global normal ~ <a-`>
+map global normal _ <a-space>
+map global normal ` _
+map global normal \' <a-i>
+map global normal \" <a-a>
+map global normal & <a-_>
+map global normal @ <a-C>
+map global normal '#' C
+map global normal C <a-l>c
+map global normal Y \"
+map global normal & <a-semicolon>
+map global normal [ <a-(>
+map global normal ] <a-)>
+map global normal { <a-u>
+map global normal } <a-U>
+map global object W <a-w> -docstring 'WORD'
+
+# user mode mappings
+map global user c ': comment-line<ret>' -docstring 'comment line'
+map global user f ': find-file<ret>' -docstring 'find file'
+map global user g ': find-text<ret>' -docstring 'find text'
+map global user l ': lint<ret>' -docstring 'lint'
+map global user m ': make<ret>' -docstring 'make'
+map global user q ': quit!<ret>' -docstring 'quit without saving'
+map global user w ': write-all<ret>' -docstring 'write all'
+map global user z ': write-all-quit<ret>' -docstring 'write all and quit'
+
+evaluate-commands %sh{
+  # disable alt mappings
+  for char in a b c d e f g h i j k l m n o p q r s t u v w x y z ; do
+    char_up=$(echo $char | tr 'a-z' 'A-Z')
+    printf "map global normal <a-$char> ''\n"
+    printf "map global normal <a-$char_up> ''\n"
+  done
+  for char in semicolon space lt gt . : @ ? ! _ / '|' '*' '&' '`' '(' ')' '[' ']' '{' '}' ; do
+    printf "map global normal <a-$char> ''\n"
+  done
+
+  # paste from system clipboard
+  [ "$(uname)" = "Darwin" ] && paste="pbpaste" || paste="wl-paste -n"
+  printf "map global user -docstring 'paste (after) from clipboard' p '<a-!>%s<ret>'\n" "$paste"
+  printf "map global user -docstring 'paste (before) from clipboard' P '!%s<ret>'\n" "$paste"
+}
+
+define-command find-file -docstring 'find file' %{ nop %sh{
+  cmd="fd --hidden --type f --exclude .git | fzf"
+  $TERMINAL --working-directory=$PWD --command fish \
+    --command "$cmd | sed -E \"s/(.*)/eval -client $kak_client edit -existing '%{\1}'/\" | kak -p $kak_session"
+}}
+
+define-command find-text -docstring 'find text' %{ nop %sh{
+  cmd="rg --line-number --no-column --no-heading --color=never '' | fzf --delimiter=':' --nth='3..'"
+  $TERMINAL --working-directory=$PWD --command fish \
+    --command "$cmd | sed -E \"s/([^:]*):([^:]*):(.*)/eval -client $kak_client edit -existing '%{\1}' \2/\" | kak -p $kak_session"
+}}
+
+# sync yank register with system clipboard
+hook global RegisterModified '"' %{ nop %sh{
+  copy() { [ "$(uname)" = "Darwin" ] && pbcopy || wl-copy > /dev/null 2>&1 ; }
+  printf %s "$kak_main_reg_dquote" | copy
+}}
+
+# make man readonly
+hook global WinSetOption filetype=man %{ set buffer readonly true }
+
+hook global BufSetOption filetype=sh %{ set-option buffer lintcmd "shellcheck -fgcc -Cnever" }
+hook global BufSetOption filetype=lua %{ set-option buffer makecmd "love ." }

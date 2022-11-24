@@ -1,0 +1,42 @@
+/*
+  ~/Library/KeyBindings/DefaultKeyBinding.Dict
+
+  Ctrl            ^
+  Shift           $
+  Option (Alt)    ~
+  Command (Win)   @
+  Numeric Keypad  #
+  Up Arrow        \UF700
+  Down Arrow      \UF701
+  Left Arrow      \UF702
+  Right Arrow     \UF703
+  Backspace       \U0008
+  Tab             \U0009
+  Escape          \U001B
+  Enter           \U000A
+  Insert          \UF727
+  Delete          \UF728
+  Home            \UF729
+  End             \UF72B
+  Page Up         \UF72C
+  Page Down       \UF72D
+  Scroll Lock     \UF72F
+  Print Screen    \UF72E
+  Pause           \UF730
+  Break           \UF732
+  SysReq          \UF731
+  Menu            \UF735
+  Help            \UF746
+  F1              \UF704
+  F2              \UF705
+  F3              \UF706
+*/
+{
+  "^c" = "copy:";
+  "^x" = "cut:";
+  "^v" = "paste:";
+  "^a" = "selectAll:";
+  "^f" = "performFindAction:";
+  "^z" = "undo:";
+  "^y" = "redo:";
+}

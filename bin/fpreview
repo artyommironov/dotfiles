@@ -1,0 +1,30 @@
+#!/usr/bin/env fish
+
+if test (count $argv) -ne 1
+  echo "Error: wrong argument count"
+  exit 1
+end
+
+set path $argv[1]
+set fileName (basename $path)
+
+if test -d "$path"
+  du -sh "$path"
+else
+  switch "$fileName"
+    case '*.bmp' '*.gif' '*.jpeg' '*.jpg' '*.JPG' '*.png' '*.svg' '*.tga' '*.webp'
+      file "$path"
+    case '*.asf' '*.avi' '*.flv' '*.mkv' '*.mpeg' '*.mpg' '*.mp4' '*.wmv'
+      ffmpeg -hide_banner -i "$path"
+    case '*.flac' '*.mp3' '*.wav'
+      ffmpeg -hide_banner -i "$path"
+    case '*.7z'
+      7z l -ba "$path"
+    case '*.rar'
+      unrar lb "$path"
+    case '*.zip'
+      unzip -l "$path"
+    case '*'
+      file "$path"
+  end
+end

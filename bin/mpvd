@@ -1,0 +1,38 @@
+#!/usr/bin/env fish
+
+set socket "$HOME/.config/mpv/socket"
+set arg "$argv[1]"
+switch "$arg"
+  case ''
+    set app (basename (status -f))
+    echo "Usage: $app [PATH|--start|--play|--next|--prev]"
+  case '--start'
+    mpv --idle=yes --input-ipc-server="$socket"
+  case '--play'
+    echo "cycle pause" | socat - "$socket"
+  case '--prev'
+    echo "playlist-prev" | socat - "$socket"
+  case '--next'
+    echo "playlist-next" | socat - "$socket"
+  case '*'
+    set file "$PWD/$arg"
+    if test -e $file
+      echo "stop" | socat - "$socket"
+      if test (path extension $file) = ".m3u"
+        echo "loadlist \"$file\" append" | socat - "$socket"
+        echo "playlist-shuffle" | socat - "$socket"
+        echo "playlist-play-index 0" | socat - "$socket"
+        test $status -ne 0 && mpv --playlist=$file --shuffle
+      else
+        set dir (dirname "$file")
+        set shuffledPaths (printf '%s\n' "$dir"/* | shuf)
+        echo "loadfile \"$file\" append" | socat - "$socket"
+        for path in $shuffledPaths
+          test "$path" != "$file" && echo "loadfile \"$path\" append" | socat - "$socket"
+        end
+        echo "playlist-play-index 0" | socat - "$socket"
+        test $status -ne 0 && mpv "$file"
+      end
+    end
+end
+exit 0

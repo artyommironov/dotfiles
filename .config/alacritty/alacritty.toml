@@ -1,0 +1,44 @@
+[colors.bright]
+black = "0x606060"
+blue = "0x60a0d0"
+cyan = "0x60d0d0"
+green = "0xa0d0a0"
+magenta = "0xd0a0d0"
+red = "0xff7070"
+white = "0xffffff"
+yellow = "0xffd070"
+
+[colors.normal]
+black = "0x404040"
+blue = "0x60a0d0"
+cyan = "0x60d0d0"
+green = "0xa0d0a0"
+magenta = "0xd0a0d0"
+red = "0xff7070"
+white = "0xd0d0d0"
+yellow = "0xffd070"
+
+[colors.primary]
+background = "0x202020"
+foreground = "0xd0d0d0"
+
+[cursor]
+blink_interval = 500
+
+[cursor.style]
+blinking = "Always"
+shape = "Block"
+
+[font]
+size = 15.0
+
+[[keyboard.bindings]]
+action = "Paste"
+key = "V"
+mode = "~Vi"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+action = "Copy"
+key = "C"
+mods = "Control|Shift"

@@ -1,0 +1,88 @@
+set clipboard+=unnamed
+set visualbell
+set noerrorbells
+
+inoremap <F1> <esc>:action QuickJavaDoc<cr>
+nnoremap <F1> :action QuickJavaDoc<cr>
+vnoremap <F1> :action QuickJavaDoc<cr>
+inoremap <F2> <esc>:action RenameElement<cr>
+nnoremap <F2> :action RenameElement<cr>
+vnoremap <F2> :action RenameElement<cr>
+inoremap <F3> <esc>:action FindInPath<cr>
+nnoremap <F3> :action FindInPath<cr>
+vnoremap <F3> :action FindInPath<cr>
+inoremap <F4> <esc>:action FindUsages<cr>
+nnoremap <F4> :action FindUsages<cr>
+vnoremap <F4> :action FindUsages<cr>
+inoremap <F6> <esc>:action SearchEverywhere<cr>
+nnoremap <F6> :action SearchEverywhere<cr>
+vnoremap <F6> :action SearchEverywhere<cr>
+inoremap <F10> <esc>:action Run<cr>
+nnoremap <F10> :action Run<cr>
+vnoremap <F10> :action Run<cr>
+
+nnoremap <C-g> <C-]>
+
+nnoremap b <esc>vb
+vnoremap b <esc>vb
+nnoremap B vb
+vnoremap B b
+nnoremap d i<del><right><esc>
+nnoremap e <esc>ve
+vnoremap e <esc>ve
+nnoremap E ve
+vnoremap E e
+nnoremap f vf
+vnoremap f <esc>vf
+nnoremap F vf
+vnoremap F f
+nnoremap gl $
+vnoremap gl <esc>$
+nnoremap gh 0
+vnoremap gh <esc>0
+nnoremap ge G
+vnoremap ge <esc>G
+vnoremap gg <esc>gg
+nnoremap g. `.
+vnoremap g. <esc>`.
+vnoremap h <esc>h
+nnoremap H vh
+vnoremap H h
+vnoremap i <esc>i
+vnoremap j <esc>j
+nnoremap J vj
+vnoremap J j
+vnoremap k <esc>k
+nnoremap K vk
+vnoremap K k
+vnoremap l <esc>l
+nnoremap L vl
+vnoremap L l
+nnoremap t vt
+vnoremap t <esc>vt
+nnoremap T vt
+vnoremap T t
+vnoremap u <esc>u
+nnoremap U <C-r>
+vnoremap U <esc><C-r>
+nnoremap v <nop>
+nnoremap V <nop>
+nnoremap w <esc>vw
+vnoremap w <esc>vw
+nnoremap W vw
+vnoremap W w
+nnoremap x 0v$
+vnoremap x <esc>0v$
+nnoremap X <nop>
+nnoremap Y <nop>
+nnoremap ; <nop>
+vnoremap ; <esc>
+nnoremap % ggvG
+vnoremap % <esc>ggvG
+nnoremap ^ J
+vnoremap ^ <esc>J
+nnoremap ' vi
+vnoremap ' <esc>vi
+nnoremap " va
+vnoremap " <esc>va
+vnoremap . <esc>.

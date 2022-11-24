@@ -1,0 +1,6 @@
+set focus-child = no
+set line-graphics = utf-8
+
+color cursor default black
+color title-focus default black
+color title-blur blue black

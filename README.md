@@ -1,8 +1,6 @@
 # Install
 
 ```
-git clone --bare git@github.com:artyommironov/dotfiles.git ~/.homegit
-git --git-dir=$HOME/.homegit --work-tree=$HOME checkout -f
-echo '*' >> ~/.homegit/info/exclude
+git clone -n git@github.com:artyommironov/dotfiles.git ~/.gh
+fish -c "cd ~/.gh && git --work-tree $HOME checkout -f && git config status.showUntrackedFiles no"
 ```
-
