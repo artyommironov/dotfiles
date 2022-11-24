@@ -1,0 +1,4 @@
+theme = "my"
+
+[editor]
+gutters = ["diagnostics"]

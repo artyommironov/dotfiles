@@ -1,0 +1,50 @@
+set $black 000000
+set $white ffffff
+set $gray1 202020
+set $gray2 404040
+set $mod Mod1
+
+exec --no-startup-id fcitx5 -d
+exec --no-startup-id mako
+exec --no-startup-id pipewire
+exec --no-startup-id pipewire-pulse
+exec --no-startup-id wireplumber
+exec --no-startup-id earlyoom -n
+
+bindsym $mod+g reload
+bindsym $mod+v exit
+bindsym $mod+w kill
+bindsym $mod+n fullscreen
+bindsym $mod+h fullscreen disable, focus prev
+bindsym $mod+t fullscreen disable, focus next
+bindsym $mod+m exec $TERMINAL
+bindsym $mod+r exec $TERMINAL --command fish --command fapps
+bindsym $mod+c exec $TERMINAL --command fish --command fmusic
+bindsym $mod+s exec notify-send -t 3000 "$(wmstatus)"
+bindsym $mod+l exec waylock -init-color 0x000000 -input-color 0x202020 -fail-color 0x800000
+bindsym $mod+z exec grim $(date '+%F_%T').webp
+bindsym XF86AudioRaiseVolume exec pactl set-sink-volume 0 +1% && notify-send -t 500 "$(wmstatus)"
+bindsym XF86AudioLowerVolume exec pactl set-sink-volume 0 -1% && notify-send -t 500 "$(wmstatus)"
+bindsym XF86AudioMute exec pactl set-sink-mute 0 toggle
+bindsym XF86AudioNext exec mpvd --next
+bindsym XF86AudioPrev exec mpvd --prev
+bindsym XF86AudioPlay exec mpvd --play
+
+workspace_layout tabbed
+default_border none
+default_floating_border none
+hide_edge_borders both
+titlebar_border_thickness 0
+titlebar_padding 6 1
+font pango:Monospace 14
+floating_modifier $mod normal
+client.focused #$gray1 #$gray1 #$white #$white #$white
+client.unfocused #$black #$black #$gray2 #$gray2 #$gray2
+gaps inner 12
+smart_gaps on
+smart_borders on
+
+output * {
+    bg #$black solid_color
+}
+

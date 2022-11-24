@@ -1,0 +1,26 @@
+#!/usr/bin/env fish
+
+function my_fun -a x y
+  echo "x='$x' y='$y'"
+  echo "argv[1]='$argv[1]'"
+  echo "argv[3..-1]='$argv[3..-1]'"
+end
+
+echo "argv = '$argv'"
+echo "argv[1] = '$argv[1]'"
+echo "argv[2] = '$argv[2]'"
+echo "(count \$argv) = '"(count $argv)"'"
+echo "(status -f) = '"(status -f)"'"
+echo ''
+
+echo 'switch $argv[1]'
+switch $argv[1]
+  case 'a*' 'b*'
+    echo 'argv[1] is a* or b*'
+  case '*'
+    echo 'argv[1] is not a* or b*'
+end
+echo ''
+
+echo 'my_fun aa bb cc dd'
+my_fun aa bb cc dd

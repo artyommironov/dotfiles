@@ -1,0 +1,6 @@
+#!/usr/bin/env fish
+
+echo (date +"%b %d %a")
+echo (date +%R)
+set -l volume (pactl list sinks | grep -E "[^ ]Volume" | sed 's/.* \([0-9][0-9]*\)%.*/\1/')
+echo "Volume $volume%"
